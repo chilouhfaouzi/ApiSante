@@ -78,7 +78,7 @@
         var buttons = document.createElement("td");
         buttons.appendChild(DeleteButtons);
         buttons.appendChild(editButtons);
-        await fetch("http://hapi.fhir.org/baseDstu3/Patient")
+        await fetch("https://hapi.fhir.org/baseDstu3/Patient")
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -117,7 +117,7 @@
           "id: " + this.parentNode.parentNode.childNodes[1].innerHTML
         );
         console.log(id);
-        fetch("http://hapi.fhir.org/baseDstu3/Patient/" + id, {
+        fetch("https://hapi.fhir.org/baseDstu3/Patient/" + id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

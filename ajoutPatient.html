@@ -124,7 +124,7 @@
 
         if (document.querySelector("#submit").innerHTML.trim() == "Ajouter") {
           console.log("ajouter");
-          fetch("http://hapi.fhir.org/baseDstu3/Patient", {
+          fetch("https://hapi.fhir.org/baseDstu3/Patient", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -139,7 +139,7 @@
           var id = document.querySelector("#id").value;
           console.log(id);
           console.log("before: " + JSON.stringify(data));
-          fetch("http://hapi.fhir.org/baseDstu3/Patient/" + id, {
+          fetch("https://hapi.fhir.org/baseDstu3/Patient/" + id, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
