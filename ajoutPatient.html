@@ -43,8 +43,10 @@
         </div>
       </div>
     </nav>
+
     <div class="container">
-      <h1 class="mt-4">Ajouter un patient</h1>
+
+      <h1 class="my-5 text-center">Ajouter un patient</h1>
       <form action="" method="post">
         <input type="hidden" name="id" id="id" />
         <div class="row">
@@ -62,8 +64,21 @@
             <input type="text" name="phone" id="phone" class="form-control" />
           </div>
           <div class="mb-3 col-6">
-            <label for="city" class="form-label">Ville de naissance</label>
+            <label for="gender" class="form-label">Genre</label>
+            <select class="form-select" name="gender" id="gender">
+              <option disabled selected value="default" >Choose...</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="independent">Independent</option>
+            </select>
+          </div>
+          <div class="mb-3 col-6">
+            <label for="city" class="form-label">Ville</label>
             <input type="text" name="city" id="city" class="form-control" />
+          </div>
+          <div class="mb-3 col-6">
+            <label for="birthDate" class="form-label">birthDate</label>
+            <input type="date" name="birthDate" id="birthDate" class="form-control" />
           </div>
         </div>
 
@@ -74,16 +89,13 @@
     </div>
 
     <script>
-
-
-    // verifier si parametre id existe dans l'url
-    var url_string = window.location.href;
-    var url = new URL(url_string);
-    var id = url.searchParams.get("id");
-    if (id) {
-
-      // change the value of Ajouter to Modifier
-      document.querySelector("#submit").innerHTML = "Modifier";
+      // verifier si parametre id existe dans l'url
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      var id = url.searchParams.get("id");
+      if (id) {
+        // change the value of Ajouter to Modifier
+        document.querySelector("#submit").innerHTML = "Modifier";
         console.log("id=" + id);
         fetch("http://hapi.fhir.org/baseDstu3/Patient/" + id)
           .then((res) => res.json())
@@ -92,10 +104,14 @@
             document.querySelector("#id").value = data.id;
             document.querySelector("#nom").value = data.name[0].family;
             document.querySelector("#prenom").value = data.name[0].given[0];
-            document.querySelector("#phone").value = data.telecom[0].value;
-            document.querySelector("#city").value = data.birthPlace.display;
+            document.querySelector("#gender").value = data.gender;
+            document.querySelector("#phone").value =
+              data.telecom?.[0].value || "";
+            document.querySelector("#city").value =
+              data.address?.[0].city || "";
+            document.querySelector("#birthDate").value = data.birthDate || "";
           });
-        }
+      }
 
       const form = document.querySelector("form");
       form.addEventListener("submit", (e) => {
@@ -109,18 +125,25 @@
               given: [form.prenom.value],
             },
           ],
-          birthPlace: {
-            display: form.city.value,
-          },
+          gender: form.gender.value || "no",
+          birthDate: form.birthDate.value || "",
           telecom: [
             {
               system: "phone",
-              value: form.phone.value,
+              value: form.phone.value || "0000000000",
+            },
+          ],
+          address: [
+            {
+              city: form.city.value || "No",
+              district: "district",
             },
           ],
         };
 
-        console.log("submit: " + document.querySelector("#submit").innerHTML.trim());
+        console.log(
+          "submit: " + document.querySelector("#submit").innerHTML.trim()
+        );
 
         if (document.querySelector("#submit").innerHTML.trim() == "Ajouter") {
           console.log("ajouter");
@@ -133,8 +156,7 @@
           })
             .then((res) => res.json())
             .then((data) => console.log(data));
-        } 
-        else {
+        } else {
           console.log("modifier");
           var id = document.querySelector("#id").value;
           console.log(id);

@@ -15,9 +15,8 @@
     <title>Patients</title>
   </head>
   <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark min-height-8">
+      <div class="container">
         <a class="navbar-brand logo" href="#">Patiens API</a>
         <button
           class="navbar-toggler"
@@ -44,30 +43,111 @@
             </li>
           </ul>
         </div>
-      </nav>
-      <div class="container">
+      </div>
+    </nav>
 
-      <!-- create table <table> patients    -->
-      <h1 class="mt-3">Liste des patients</h1>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Prenom</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Ville de naissance</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody id="patients"></tbody>
-      </table>
+    <div class="container-fluid">
+      <div class="row min-height-100">
+        <div class="col-md-2 filterDiv">
+          <h2 class="my-5">Filtre</h2>
+          <form action="" id="filterForm">
+            <div class="mt-4">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control input"
+                placeholder="Nom"
+              />
+            </div>
+            <div class="mt-4">
+              <select class="form-select input" name="gender" id="gender">
+                <option selected value="">Choose...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="independent">Independent</option>
+              </select>
+            </div>
+            <div class="mt-4">
+              <input
+                type="text"
+                name="address"
+                id="address"
+                class="form-control input"
+                placeholder="Address"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary mt-4" id="submit">
+              Rechercher
+            </button>
+          </form>
+        </div>
+        <div class="col-md-10">
+          <h1 class="text-center my-5">Liste des patients</h1>
+          <table class="table">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Ville</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="patients"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- get patients -->
     <script>
-      window.onload = showPatients;
+      window.onload = showPatients();
+
+      var filterForm = document.querySelector("#filterForm");
+      filterForm.addEventListener("submit", filterPatients);
+
+      async function filterPatients() {
+        //prevent default
+        event.preventDefault();
+        // //get the value of the input
+        // var nameElement = document.querySelector("#prenom");
+        // var genderElement = document.querySelector("#gender");
+        // var name = nameElement.value ? nameElement.value : "";
+        // var gender = genderElement.value ? genderElement.value : "";
+        // console.log("name: "  + name);
+
+        // var nameFilter = name ? "given=" : "";
+        // var genderFilter = gender ? "gender=" : "" ;
+
+        // url = "https://hapi.fhir.org/baseDstu3/Patient?" + nameFilter  + name + "&" + genderFilter + gender;
+
+        var inputs = document.querySelectorAll("#filterForm .input");
+        // get inputs which have value
+        var inputsWithValue = Array.from(inputs).filter((input) => input.value);
+        inputsWithValue.forEach((input) => console.log(input));
+        var url = "https://hapi.fhir.org/baseDstu3/Patient?";
+
+        inputsWithValue.forEach((input) => {
+          url += input.name + "=" + input.value.trim() + "&";
+        });
+        url = url.slice(0, -1);
+        console.log(url);
+
+        await callApi(url);
+      }
+
       async function showPatients() {
+        url = "https://hapi.fhir.org/baseDstu3/Patient";
+        await callApi(url);
+      }
+
+      async function callApi(url) {
+        document.querySelector("#patients").innerHTML = "";
+        document.querySelectorAll(".delete").innerHTML = "";
+        document.querySelectorAll(".edit").innerHTML = "";
+
         var DeleteButtons = document.createElement("button");
         DeleteButtons.classList.add("btn", "btn-danger", "delete");
         DeleteButtons.innerHTML = "Delete";
@@ -78,7 +158,8 @@
         var buttons = document.createElement("td");
         buttons.appendChild(DeleteButtons);
         buttons.appendChild(editButtons);
-        await fetch("https://hapi.fhir.org/baseDstu3/Patient")
+
+        await fetch(url)
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
@@ -90,9 +171,9 @@
               patientRow.innerHTML = `
                 <td>${patientData.id}</td>
                 <td>${patientData.name[0].family}</td>
-                <td>${patientData.name[0].given[0]}</td>
+                <td>${patientData.name[0].given?.[0]}</td>
                 <td>${patientData?.telecom?.[0].value || "00000000000"}</td>
-                <td>${patientData?.birthPlace?.display || "No"}</td>
+                <td>${patientData?.address?.[0].city || "No"}</td>
                 <td>${buttons.innerHTML}</td>
                 `;
 

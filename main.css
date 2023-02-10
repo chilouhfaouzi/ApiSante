@@ -7,7 +7,6 @@
     font-family: 'Roboto', sans-serif;
     display: inline-block;
     padding: 10px 0;
-    margin: 0 20px;
     position: relative;
     z-index: 1;
 }
@@ -24,4 +23,20 @@
     margin: 0 20px;
     position: relative;
     z-index: 1;
+}
+
+.filterDiv{
+    background-color: #130a36;
+    color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+.min-height-8{
+    min-height: 8.5vh;
+}
+
+.min-height-100{
+    min-height: 91.5vh;
 }
