@@ -97,34 +97,46 @@
             </thead>
             <tbody id="patients"></tbody>
           </table>
+
+          <nav aria-label="Page navigation example" id="pagination">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" id="prev">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" id="next">Next</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
 
     <!-- get patients -->
     <script>
+      var offset = 0;
       window.onload = showPatients();
+
+      var prev = document.querySelector("#prev");
+      var next = document.querySelector("#next");
+
+      prev.addEventListener("click", () => {
+        if (offset == 20) {
+          prev.parentElement.classList.add("disabled");
+        }
+        showPatients("prev");
+      });
+      next.addEventListener("click", () => {
+        prev.parentElement.classList.remove("disabled");
+        showPatients("next");
+      });
 
       var filterForm = document.querySelector("#filterForm");
       filterForm.addEventListener("submit", filterPatients);
 
       async function filterPatients() {
-        //prevent default
+        offset = 0;
         event.preventDefault();
-        // //get the value of the input
-        // var nameElement = document.querySelector("#prenom");
-        // var genderElement = document.querySelector("#gender");
-        // var name = nameElement.value ? nameElement.value : "";
-        // var gender = genderElement.value ? genderElement.value : "";
-        // console.log("name: "  + name);
-
-        // var nameFilter = name ? "given=" : "";
-        // var genderFilter = gender ? "gender=" : "" ;
-
-        // url = "https://hapi.fhir.org/baseDstu3/Patient?" + nameFilter  + name + "&" + genderFilter + gender;
 
         var inputs = document.querySelectorAll("#filterForm .input");
-        // get inputs which have value
         var inputsWithValue = Array.from(inputs).filter((input) => input.value);
         inputsWithValue.forEach((input) => console.log(input));
         var url = "https://hapi.fhir.org/baseDstu3/Patient?";
@@ -138,8 +150,20 @@
         await callApi(url);
       }
 
-      async function showPatients() {
-        url = "https://hapi.fhir.org/baseDstu3/Patient";
+      async function showPatients(direction = null) {
+        if (direction == "prev" && offset > 0) {
+          offset = offset - 20;
+          var url =
+            "https://hapi.fhir.org/baseDstu3/Patient?_count=20&_getpagesoffset=" +
+            offset;
+        } else if (direction == "next") {
+          offset = offset + 20;
+          var url =
+            "https://hapi.fhir.org/baseDstu3/Patient?_count=20&_getpagesoffset=" +
+            offset;
+        } else {
+          var url = "https://hapi.fhir.org/baseDstu3/Patient";
+        }
         await callApi(url);
       }
 
@@ -164,11 +188,21 @@
           .then((data) => {
             console.log(data);
             const patients = data.entry;
-            const patientsList = document.querySelector("#patients");
-            patients.forEach((patient) => {
-              const patientData = patient.resource;
-              const patientRow = document.createElement("tr");
-              patientRow.innerHTML = `
+            if (patients.length < 20) {
+              document.querySelector("#pagination").style.display = "none";
+            }
+            else{
+              document.querySelector("#pagination").style.display = "block";
+            }
+            if (patients.length == 0) {
+              document.querySelector("#patients").innerHTML =
+                "<h1 class='text-center'>No patients found</h1>";
+            } else {
+              const patientsList = document.querySelector("#patients");
+              patients.forEach((patient) => {
+                const patientData = patient.resource;
+                const patientRow = document.createElement("tr");
+                patientRow.innerHTML = `
                 <td>${patientData.id}</td>
                 <td>${patientData.name[0].family}</td>
                 <td>${patientData.name[0].given?.[0]}</td>
@@ -177,8 +211,9 @@
                 <td>${buttons.innerHTML}</td>
                 `;
 
-              patientsList.appendChild(patientRow);
-            });
+                patientsList.appendChild(patientRow);
+              });
+            }
           });
 
         var deleteButtons = document.querySelectorAll(".delete");
