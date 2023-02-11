@@ -168,7 +168,7 @@
       }
 
       async function callApi(url) {
-        document.querySelector("#patients").innerHTML = "";
+        document.querySelector("#patients").innerHTML = "<tr><td class='text-center' colspan='6'>Rechercher en cours </td></tr>"
         document.querySelectorAll(".delete").innerHTML = "";
         document.querySelectorAll(".edit").innerHTML = "";
 
@@ -199,6 +199,7 @@
                 "<h1 class='text-center'>No patients found</h1>";
             } else {
               const patientsList = document.querySelector("#patients");
+              patientsList.innerHTML = "";
               patients.forEach((patient) => {
                 const patientData = patient.resource;
                 const patientRow = document.createElement("tr");
