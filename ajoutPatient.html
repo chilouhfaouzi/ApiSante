@@ -77,8 +77,8 @@
             <input type="text" name="city" id="city" class="form-control" />
           </div>
           <div class="mb-3 col-6">
-            <label for="birthDate" class="form-label">Date de naissance</label>
-            <input type="date" name="birthDate" id="birthDate" class="form-control" />
+            <label for="birthdate" class="form-label">Date de naissance</label>
+            <input type="date" name="birthdate" id="birthdate" class="form-control" />
           </div>
         </div>
 
@@ -109,7 +109,7 @@
               data.telecom?.[0].value || "";
             document.querySelector("#city").value =
               data.address?.[0].city || "";
-            document.querySelector("#birthDate").value = data.birthDate || "";
+            document.querySelector("#birthdate").value = data.birthDate || "";
           });
       }
 
@@ -126,7 +126,7 @@
             },
           ],
           gender: form.gender.value || "no",
-          birthDate: form.birthDate.value || "",
+          birthDate: form.birthdate.value || "",
           telecom: [
             {
               system: "phone",

@@ -77,6 +77,16 @@
                 placeholder="Address"
               />
             </div>
+
+            <div class="mt-4">
+              <input
+                type="date"
+                name="birthdate"
+                id="birthdate"
+                class="form-control input"
+                placeholder="birthdate"
+              />
+            </div>
             <button type="submit" class="btn btn-primary mt-4" id="submit">
               Rechercher
             </button>
@@ -92,6 +102,7 @@
                 <th scope="col">Prenom</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Ville</th>
+                <th scope="col">birthdate</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -139,7 +150,7 @@
         var inputs = document.querySelectorAll("#filterForm .input");
         var inputsWithValue = Array.from(inputs).filter((input) => input.value);
         inputsWithValue.forEach((input) => console.log(input));
-        var url = "https://hapi.fhir.org/baseDstu3/Patient?";
+        var url = "https://hapi.fhir.org/baseDstu3/Patient/_search?";
 
         inputsWithValue.forEach((input) => {
           url += input.name + "=" + input.value.trim() + "&";
@@ -168,7 +179,7 @@
       }
 
       async function callApi(url) {
-        document.querySelector("#patients").innerHTML = "<tr><td class='text-center' colspan='6'>Rechercher en cours </td></tr>"
+        document.querySelector("#patients").innerHTML = "<tr><td class='text-center' colspan='6'>Rechercher en cours... </td></tr>"
         document.querySelectorAll(".delete").innerHTML = "";
         document.querySelectorAll(".edit").innerHTML = "";
 
@@ -188,15 +199,15 @@
           .then((data) => {
             console.log(data);
             const patients = data.entry;
-            if (patients.length < 20) {
+            if (patients?.length < 20 || patients == undefined) {
               document.querySelector("#pagination").style.display = "none";
             }
             else{
               document.querySelector("#pagination").style.display = "block";
             }
-            if (patients.length == 0) {
+            if (patients == undefined || patients.length == 0 ) {
               document.querySelector("#patients").innerHTML =
-                "<h1 class='text-center'>No patients found</h1>";
+                "<tr><td class='text-center' colspan='6'>Aucun patient trouvé</td></tr>";
             } else {
               const patientsList = document.querySelector("#patients");
               patientsList.innerHTML = "";
@@ -207,8 +218,10 @@
                 <td>${patientData.id}</td>
                 <td>${patientData.name[0].family}</td>
                 <td>${patientData.name[0].given?.[0]}</td>
-                <td>${patientData?.telecom?.[0].value || "00000000000"}</td>
-                <td>${patientData?.address?.[0].city || "No"}</td>
+                <td>${patientData?.telecom?.[0].value || "<span class='text-secondary'>________</span>"}</td>
+                <td>${patientData?.address?.[0].city || "<span class='text-secondary'>_____</span>"}</td>
+                <td>${patientData?.birthDate || "<span class='text-secondary'>________</span>"}</td>
+
                 <td>${buttons.innerHTML}</td>
                 `;
 
