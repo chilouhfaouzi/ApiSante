@@ -102,7 +102,7 @@
                 <th scope="col">Prenom</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Ville</th>
-                <th scope="col">birthdate</th>
+                <th scope="col">Date de naissance</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -149,31 +149,28 @@
 
         var inputs = document.querySelectorAll("#filterForm .input");
         var inputsWithValue = Array.from(inputs).filter((input) => input.value);
-        inputsWithValue.forEach((input) => console.log(input));
+        // inputsWithValue.forEach((input) => console.log(input));
         var url = "https://hapi.fhir.org/baseDstu3/Patient/_search?";
 
         inputsWithValue.forEach((input) => {
           url += input.name + "=" + input.value.trim() + "&";
         });
         url = url.slice(0, -1);
-        console.log(url);
 
         await callApi(url);
       }
 
       async function showPatients(direction = null) {
+        var url = "https://hapi.fhir.org/baseDstu3/Patient?_sort%3Adesc=_lastUpdated";
+
         if (direction == "prev" && offset > 0) {
           offset = offset - 20;
-          var url =
-            "https://hapi.fhir.org/baseDstu3/Patient?_count=20&_getpagesoffset=" +
-            offset;
-        } else if (direction == "next") {
+          url += "&_count=20&_getpagesoffset=" + offset;
+              } else if (direction == "next") {
           offset = offset + 20;
-          var url =
-            "https://hapi.fhir.org/baseDstu3/Patient?_count=20&_getpagesoffset=" +
-            offset;
+           url += "&_count=20&_getpagesoffset=" + offset;
         } else {
-          var url = "https://hapi.fhir.org/baseDstu3/Patient";
+          offset = 0;
         }
         await callApi(url);
       }
@@ -197,7 +194,6 @@
         await fetch(url)
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             const patients = data.entry;
             if (patients?.length < 20 || patients == undefined) {
               document.querySelector("#pagination").style.display = "none";
@@ -216,8 +212,8 @@
                 const patientRow = document.createElement("tr");
                 patientRow.innerHTML = `
                 <td>${patientData.id}</td>
-                <td>${patientData.name[0].family}</td>
-                <td>${patientData.name[0].given?.[0]}</td>
+                <td>${patientData.name?.[0].family}</td>
+                <td>${patientData.name?.[0].given?.[0]}</td>
                 <td>${patientData?.telecom?.[0].value || "<span class='text-secondary'>________</span>"}</td>
                 <td>${patientData?.address?.[0].city || "<span class='text-secondary'>_____</span>"}</td>
                 <td>${patientData?.birthDate || "<span class='text-secondary'>________</span>"}</td>
@@ -231,7 +227,6 @@
           });
 
         var deleteButtons = document.querySelectorAll(".delete");
-        console.log(deleteButtons.length);
         deleteButtons.forEach((button) => {
           button.addEventListener("click", deletePatient);
         });
@@ -246,7 +241,6 @@
         console.log(
           "id: " + this.parentNode.parentNode.childNodes[1].innerHTML
         );
-        console.log(id);
         fetch("https://hapi.fhir.org/baseDstu3/Patient/" + id, {
           method: "DELETE",
           headers: {
@@ -255,7 +249,6 @@
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             location.reload();
           });
       }
