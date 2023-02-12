@@ -49,3 +49,9 @@ body {
 .min-height-100 {
   min-height: 91.5vh;
 }
+
+
+/* make table responsive */
+table {
+ overflow-x: auto;
+}
