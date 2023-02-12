@@ -65,7 +65,7 @@
                 <option selected value="">Choose...</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="independent">Independent</option>
+                <option value="unknown">Independent</option>
               </select>
             </div>
             <div class="mt-4">
@@ -103,6 +103,7 @@
                 <th scope="col">Phone</th>
                 <th scope="col">Ville</th>
                 <th scope="col">Date de naissance</th>
+                <th scope="col">Genre</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -217,7 +218,7 @@
                 <td>${patientData?.telecom?.[0].value || "<span class='text-secondary'>________</span>"}</td>
                 <td>${patientData?.address?.[0].city || "<span class='text-secondary'>_____</span>"}</td>
                 <td>${patientData?.birthDate || "<span class='text-secondary'>________</span>"}</td>
-
+                <td>${patientData?.gender || "<span class='text-secondary'>_____</span>"}</td>
                 <td>${buttons.innerHTML}</td>
                 `;
 
