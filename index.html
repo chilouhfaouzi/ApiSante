@@ -125,6 +125,7 @@
     <!-- get patients -->
     <script>
       var offset = 0;
+      var isByFilter = false;
       window.onload = showPatients();
 
       var prev = document.querySelector("#prev");
@@ -134,18 +135,29 @@
         if (offset == 20) {
           prev.parentElement.classList.add("disabled");
         }
-        showPatients("prev");
+        if(isByFilter){
+          filterPatients("prev");
+        }
+        else{
+          showPatients("prev");
+        }
       });
       next.addEventListener("click", () => {
         prev.parentElement.classList.remove("disabled");
-        showPatients("next");
+        if(isByFilter){
+          filterPatients("next");
+        }
+        else{
+          showPatients("next");
+        }
+       
       });
 
       var filterForm = document.querySelector("#filterForm");
       filterForm.addEventListener("submit", filterPatients);
 
-      async function filterPatients() {
-        offset = 0;
+      async function filterPatients(direction = null) {
+        isByFilter = true;
         event.preventDefault();
 
         var inputs = document.querySelectorAll("#filterForm .input");
@@ -158,10 +170,21 @@
         });
         url = url.slice(0, -1);
 
+        if (direction == "prev" && offset > 0) {
+          offset = offset - 20;
+          url += "&_count=20&_getpagesoffset=" + offset;
+        } else if (direction == "next") {
+          offset = offset + 20;
+          url += "&_count=20&_getpagesoffset=" + offset;
+        } else {
+          offset = 0;
+        }
+
         await callApi(url);
       }
 
       async function showPatients(direction = null) {
+        isByFilter = false;
         var url = "https://hapi.fhir.org/baseDstu3/Patient?_sort%3Adesc=_lastUpdated";
 
         if (direction == "prev" && offset > 0) {
