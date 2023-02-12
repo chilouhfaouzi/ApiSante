@@ -14,9 +14,12 @@
     <title>Ajout Patient</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-end">
-      <div class="container">
-        <a class="navbar-brand logo" href="#">Patiens API</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-end px-3">
+      <div class="container-fluid">
+        <a class="navbar-brand logo" href="#">
+          <span class="patients">Patiens</span>
+          <span class="api">API</span>
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -45,7 +48,6 @@
     </nav>
 
     <div class="container">
-
       <h1 class="my-5 text-center">Ajouter un patient</h1>
       <form action="" method="post">
         <input type="hidden" name="id" id="id" />
@@ -66,7 +68,7 @@
           <div class="mb-3 col-6">
             <label for="gender" class="form-label">Genre</label>
             <select class="form-select" name="gender" id="gender">
-              <option disabled selected value="" >Choose...</option>
+              <option disabled selected value="">Choose...</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="unknown">Independent</option>
@@ -78,7 +80,12 @@
           </div>
           <div class="mb-3 col-6">
             <label for="birthdate" class="form-label">Date de naissance</label>
-            <input type="date" name="birthdate" id="birthdate" class="form-control" />
+            <input
+              type="date"
+              name="birthdate"
+              id="birthdate"
+              class="form-control"
+            />
           </div>
         </div>
 

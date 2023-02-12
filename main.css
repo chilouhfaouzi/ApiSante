@@ -1,42 +1,51 @@
-.logo{
-    font-size: 25px;
-    font-weight: bold;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Roboto', sans-serif;
-    display: inline-block;
-    padding: 10px 0;
-    position: relative;
-    z-index: 1;
+body {
+  background-color: #f2f0fccf;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
 }
 
-.nav-link{
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Roboto', sans-serif;
-    display: inline-block;
-    padding: 10px 0;
-    margin: 0 20px;
-    position: relative;
-    z-index: 1;
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  padding: 10px 0;
 }
 
-.filterDiv{
-    background-color: #130a36;
-    color: #ffffff;
-    text-align: center;
-    font-size: 16px;
+.patients {
+  color: #cbbeff;
 }
 
-
-.min-height-8{
-    min-height: 8.5vh;
+.api {
+  color: #ffffff;
 }
 
-.min-height-100{
-    min-height: 91.5vh;
+.nav-link {
+  font-size: 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: "Roboto", sans-serif;
+  display: inline-block;
+  padding: 10px 0;
+  margin: 0 20px;
+}
+.navbar-nav .active .nav-link {
+  color: #ffffff;
+  font-weight: 600 !important;
+}
+
+.filterDiv {
+  background-color: #130a36;
+  color: #ffffff;
+  text-align: center;
+  font-size: 16px;
+}
+
+.min-height-8 {
+  min-height: 8.5vh;
+}
+
+.min-height-100 {
+  min-height: 91.5vh;
 }
