@@ -65,7 +65,7 @@
             </div>
             <div class="mt-4">
               <select class="form-select input" name="gender" id="gender">
-                <option selected value="">Choose...</option>
+                <option selected value="" disabled>Genre...</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="unknown">Independent</option>
@@ -83,11 +83,13 @@
 
             <div class="mt-4">
               <input
-                type="date"
+                type="text"
                 name="birthdate"
                 id="birthdate"
                 class="form-control input"
-                placeholder="birthdate"
+                placeholder="Date de naissance"
+                onfocus="(this.type='date')"
+                onclik="(this.type='date')"
               />
             </div>
             <button type="submit" class="btn btn-primary mt-4 mb-2" id="submit">
